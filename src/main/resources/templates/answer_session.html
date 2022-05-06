@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>История игр пользователя</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="#">Управление пользователями</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}"> Главная страница </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class ="container">
+    <div class = "row">
+        <h1 style="margin: 20px 50px 35px 250px"> История игр пользователя
+            <th:block th:if="${!sessions.isEmpty()}">
+            <span th:text = "${sessions[0].user.username}"></span></th:block>
+           </h1>
+    </div>
+
+    <table class = "table table-striped table-bordered">
+        <thead class = "table-dark">
+        <tr>
+            <th> №</th>
+            <th> Вопрос</th>
+            <th> Правильный ответ</th>
+            <th> Дата</th>
+            <th> Количество неправилных попыток</th>
+            <th> Статус игры</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each = "answer: ${sessions}">
+            <td th:text = "${answer.id}"></td>
+            <td th:text = "${answer.question.name}"></td>
+            <td th:text="${answer.question.answer}"></td>
+            <td> <span th:text="${answer.question.createDate.toLocalDate()}"></span>
+                 <span th:text="${answer.question.createDate.toLocalTime()}"></span>
+            </td>
+            <td th:text="${answer.attempts}"></td>
+            <td><th:block th:if="${answer.status.name().startsWith('LOSS')}">
+            <span style="color: red">Проиграл</span>
+            </th:block>
+            <th:block th:if="${answer.status.name().startsWith('WON')}">
+                <span style="color: green">Выиграл</span>
+            </th:block>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

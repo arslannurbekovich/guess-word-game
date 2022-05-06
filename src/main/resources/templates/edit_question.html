@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление вопросами</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="#">Управление вопросами</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/questions}">Управление вопросами</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<br>
+<div class = "container">
+    <div class = "row">
+        <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class = "text-center"> Редактирование вопроса </h1>
+            <div class = "card-body">
+                <form th:action="@{/questions/{id} (id=${question.id})}" th:object = "${question}" method="POST">
+                    <div class ="form-group">
+                        <label> Содкржание вопроса </label>
+                        <input
+                                type = "text"
+                                name = "name"
+                                th:field = "*{name}"
+                                class = "form-control"
+                                placeholder="Введтите вопрос"
+                                required autofocus="autofocus"
+                        />
+                    </div>
+
+                    <div class ="form-group">
+                        <label> Правильный ответ </label>
+                        <input
+                                type = "text"
+                                name = "answer"
+                                th:field = "*{answer}"
+                                class = "form-control"
+                                placeholder="Введите правильный ответ вопроса"
+                                required autofocus="autofocus"
+                        />
+                    </div>
+
+                    <div class = "box-footer">
+                        <button type="submit" class = "btn btn-primary">
+                            Сохранить измениение
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>>

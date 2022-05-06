@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Глваная страница</title>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <img id='logo' th:src="@{/js/images/logo.png}" alt=""/>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}"> Главная страница </a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a style="margin-left: 100rem" class="nav-link" th:href="@{/logout}">Выйти</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table class="table table-striped table-bordered" style="font-size: 20px">
+    <thead>
+    <tr>
+        <td>
+            <button class="menu-btns" sec:authorize="hasRole('ROLE_ADMIN')" style="margin-left: 25px" onclick = window.location.href="/questions">Вопросы
+            </button>
+            <button class="menu-btns" sec:authorize="hasRole('ROLE_ADMIN')" style="margin-left: 90px" onclick = window.location.href="/users">Пользователи
+            </button>
+            <button class="menu-btns" style="margin-left: 90px" onclick = window.location.href="/start">Игра</button>
+        </td>
+    </tr>
+    </thead>
+</table>
+
+<div style="font-size: 30px; text-align: center">
+    Добро пожаловать <span sec:authentication="principal.username"> User</span> !
+</div>
+<div style="margin: 5rem 0 0 43rem"><img th:src="@{/js/images/welcome.png}" alt=""/></div>
+
+</body>
+</html>
+
+<style>
+    .menu-btns {
+        background: white;
+        color: #642B73;
+        font-size: 20px;
+        border: none;
+        border-radius: 2px;
+        padding: 10px;
+    }
+    .menu-btns:hover {
+        color: white;
+        font-size: 21px;
+        text-underline: none;
+        background: linear-gradient(45deg, #642B73, #c6426e);
+        border: none;
+        padding: 10px;
+    }
+</style>

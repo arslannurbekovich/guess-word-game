@@ -1,0 +1,76 @@
+package com.example.testgame.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.example.testgame.service.UserService;
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    private final UserService userService;
+
+    public SecurityConfiguration(@Lazy UserService userService) {
+        this.userService = userService;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userService);
+        auth.setPasswordEncoder(passwordEncoder());
+        return auth;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeRequests().antMatchers(
+                        "/registration**",
+                        "/js/**",
+                        "/css/**",
+                        "/img/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/questions").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,"/registration").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/registration").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/session/sessions").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"//questions/new").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,"/questions").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/game").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.GET,"/start").hasAnyRole("ADMIN","USER")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
+    }
+
+}
+

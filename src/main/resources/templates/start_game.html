@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Игра</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="#">Игра Поле чудес</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}"> Главная страница </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<section class="ui-icon-backgrounds">
+
+    <div class="form-group">
+        <h1 style="margin-left: 50rem; color: white"> Игра Поле чудес </h1>
+        <div class="row">
+            <button  th:onclick="|window.location.href='@{/game}'|" style="margin-left: 52rem;
+             margin-top:20rem; padding: 10px 80px 10px 80px;
+            font-size: 25px" type="submit" class="btn btn-success">Начать игру</button>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
+
+<style>
+    .ui-icon-backgrounds{
+        width: 100%;
+        height: 100vh;
+        background-image: url("/js/images/background2.jpg");
+        background-size: 100%;
+    }
+</style>
