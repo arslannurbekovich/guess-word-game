@@ -7,6 +7,8 @@ let status = '';
 let wordStatus = null;
 let enabled = false;
 let user ='';
+let httpRequest=new XMLHttpRequest();
+let responseText='';
 let changeLanguageBtn = `<button style="margin-left: 20px"
     class="btn btn-outline-warning" onClick="changeLang()">En/Ru</button>`;
 let changeAnswerBtn = `<button style="margin-left: 20px" onClick="changeAnswer()"
@@ -72,6 +74,7 @@ function checkIfGameWon() {
         document.getElementById('keyboard').innerHTML = 'Вы выиграли!!!';
         status="WON";
         sending();
+        myMessage("Отлично! Вы угадали!","success");
     }
 }
 
@@ -81,6 +84,7 @@ function checkIfGameLost() {
         document.getElementById('keyboard').innerHTML = 'Вы проиграли!!!';
         status="LOSS";
         sending();
+        myMessage("Неправильный ответ!","error");
     }
 }
 function checkIfGameLostPrompt() {
@@ -89,6 +93,7 @@ function checkIfGameLostPrompt() {
         document.getElementById('keyboard').innerHTML = 'Вы проиграли!!!';
         status="LOSS";
         sending();
+        myMessage("Неправильный ответ!","error");
     }
 }
 
@@ -137,22 +142,26 @@ function myFunction() {
 
 }
 
+function myMessage(title,status) {
+    swal({
+        title: title,
+        text: responseText,
+        icon: status,
+    });
+}
+
 function sending(){
-    let httpRequest=new XMLHttpRequest();
     httpRequest.open("POST",'http://localhost:8080/api/save');
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     httpRequest.send(JSON.stringify({ "answer": answer, "mistakes": mistakes,
                                                       "status":status,"user":user}));
     httpRequest.onload=function (){
-        swal({
-            title: httpRequest.responseText,
-            icon: "success",
-        });
+        responseText=httpRequest.responseText;
     }
     console.log("save")
 }
 
-document.getElementById('maxWrong').innerHTML = maxWrong;
+document.getElementById('maxWrong').innerHTML = answer;
 
 generateButtons();
 questionWord();

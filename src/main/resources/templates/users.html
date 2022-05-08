@@ -33,11 +33,12 @@
     <table class = "table table-striped table-bordered">
         <thead class = "table-dark">
         <tr>
-            <th> Полное имя</th>
-            <th> Имя пользователя</th>
-            <th> Роли</th>
-            <th> Дата регистрации</th>
-            <th> История игры</th>
+            <th>Полное имя</th>
+            <th>Имя пользователя</th>
+            <th>Роли</th>
+            <th>Дата регистрации</th>
+            <th>История игры</th>
+            <th>Действия</th>
         </tr>
         </thead>
 
@@ -56,7 +57,8 @@
             <td th:text = "${user.createDate.toLocalDate()}"></td>
             <td>
                 <a th:href = "@{/session/sessions/{id}(id=${user.id})}"
-                   class = "btn btn-primary">Посмотреть результаты</a>
+                   class = "btn btn-primary">Посмотреть результаты</a></td>
+            <td>
                 <th:block th:each="role: ${user.roles}">
                 <th:block th:if="${role.name.endsWith('USER')}">
                     <a th:href = "@{/users/{id}(id=${user.id})}" class="btn btn-danger" >Удалить пользователя</a>
