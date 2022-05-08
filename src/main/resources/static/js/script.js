@@ -126,11 +126,14 @@ function reset() {
 }
 
 function myFunction() {
-    let result = window.prompt("Пожалуйста введите слово:");
-    wordStatus=result;
-    guessedWordPrompt();
-    checkIfGameWon();
-    checkIfGameLostPrompt();
+    swal("Пожалуйста введите слово:", {
+        content: "input",
+    }).then((value) => {
+        wordStatus = value;
+        guessedWordPrompt();
+        checkIfGameWon();
+        checkIfGameLostPrompt();
+    });
 
 }
 
@@ -141,9 +144,12 @@ function sending(){
     httpRequest.send(JSON.stringify({ "answer": answer, "mistakes": mistakes,
                                                       "status":status,"user":user}));
     httpRequest.onload=function (){
-        alert(httpRequest.responseText);
+        swal({
+            title: httpRequest.responseText,
+            icon: "success",
+        });
     }
-    console.log("save inside the js file")
+    console.log("save")
 }
 
 document.getElementById('maxWrong').innerHTML = maxWrong;

@@ -59,8 +59,7 @@
                    class = "btn btn-primary">Посмотреть результаты</a>
                 <th:block th:each="role: ${user.roles}">
                 <th:block th:if="${role.name.endsWith('USER')}">
-                    <a th:href = "@{/users/{id}(id=${user.id})}"
-                       class = "btn btn-danger delBtn">Удалить пользователя</a>
+                    <a th:href = "@{/users/{id}(id=${user.id})}" class="btn btn-danger" >Удалить пользователя</a>
                 </th:block>
                 </th:block>
             </td>
