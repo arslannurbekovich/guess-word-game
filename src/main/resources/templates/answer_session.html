@@ -22,6 +22,9 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/}"> Главная страница </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users}"> Вернутся к странице пользователей </a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -66,6 +69,29 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<div th:if="${!sessions.isEmpty()}" class="container">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            <li th:if="${currentPage != 0}" class="page-item">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${currentPage-1}}">Предыдущая</a>
+            </li>
+            <li th:if="${currentPage == 0}" class="page-item disabled">
+                <a class="page-link" href="#">Предыдущая</a>
+            </li>
+            <li th:each="page:${#numbers.sequence(1,totalPage)}" class="page-item" aria-current="page"
+                th:classappend="${currentPage==(page-1)? 'active' : ''}">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${page-1}}">[[${page}]]</a>
+            </li>
+            <li th:if="${currentPage+1 != totalPage}" class="page-item">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${currentPage+1}}">Следующая</a>
+            </li>
+            <li th:if="${currentPage+1 == totalPage}" class="page-item disabled">
+                <a class="page-link" href="#">Следующая</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 </body>

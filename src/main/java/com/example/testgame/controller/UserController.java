@@ -1,6 +1,8 @@
 package com.example.testgame.controller;
 
+import com.example.testgame.entity.User;
 import com.example.testgame.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +32,26 @@ public class UserController {
     @GetMapping("/users")
     public String findAllUsers(Model model) {
         model.addAttribute("dateFormat", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
+        return getPagination(0,model);
     }
 
     @GetMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return "redirect:/users";
+    }
+
+    @GetMapping("users/page/{page}")
+    public String getPagination(@PathVariable int page, Model model){
+
+        Page<User> userPage = userService.getUsersPagination(page,5);
+
+        model.addAttribute("users", userPage);
+        model.addAttribute("currentPage",page);
+        model.addAttribute("totalPage",userPage.getTotalPages());
+        model.addAttribute("totalItem",userPage.getTotalElements());
+
+        return "users";
     }
 
 }

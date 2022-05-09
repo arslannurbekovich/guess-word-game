@@ -9,5 +9,10 @@ public interface AnswerService {
 
     Answer saveAnswer(Map<String, String> history);
 
-    List<Answer> getAllByUserId(Long userId);
+    List<Answer> findAllUsersAnswers(Long userId);
+
+    Integer getTotalAnswersByUser(Long userId);
+
+    List<Answer> findAnswersByUserWithTotalPage(Long userId, Integer page);
+
 }

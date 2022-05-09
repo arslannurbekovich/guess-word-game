@@ -2,6 +2,7 @@ package com.example.testgame.controller;
 
 import com.example.testgame.entity.Question;
 import com.example.testgame.service.QuestionService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +22,7 @@ public class QuestionController {
 
     @GetMapping("/questions")
     public String listQuestions(Model model) {
-        model.addAttribute("questions", questionService.getAllQuestions());
-        return "questions";
+        return getQuestionPagination(0,model);
     }
 
     @GetMapping("/questions/new")
@@ -51,8 +51,7 @@ public class QuestionController {
 
     @PostMapping("/questions/{id}")
     public String updateQuestion(@PathVariable Long id,
-                                @ModelAttribute("question") @Valid Question question,
-                                Model model) {
+                                @ModelAttribute("question") @Valid Question question) {
 
         Question updateQuestion = questionService.getQuestionById(id);
         updateQuestion.setId(id);
@@ -67,5 +66,19 @@ public class QuestionController {
     public String deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestionById(id);
         return "redirect:/questions";
+    }
+
+    @GetMapping("/questions/page/{page}")
+    public String getQuestionPagination(@PathVariable Integer page,Model model){
+
+        Page<Question> questionPage = questionService.getQuestionPagination(page,5);
+
+        model.addAttribute("questions", questionPage);
+        model.addAttribute("currentPage",page);
+        model.addAttribute("totalPage",questionPage.getTotalPages());
+        model.addAttribute("totalItem",questionPage.getTotalElements());
+
+        return "questions";
+
     }
 }

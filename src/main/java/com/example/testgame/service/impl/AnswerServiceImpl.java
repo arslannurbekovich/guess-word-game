@@ -47,7 +47,18 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<Answer> getAllByUserId(Long userId) {
+    public List<Answer> findAllUsersAnswers(Long userId) {
         return answerRepository.findAllByUserId(userId);
     }
+
+    @Override
+    public Integer getTotalAnswersByUser(Long userId) {
+        return answerRepository.countAllByUserId(userId);
+    }
+
+    @Override
+    public List<Answer> findAnswersByUserWithTotalPage(Long userId, Integer page) {
+        return answerRepository.getAnswersByUserWithTotalPage(userId,page);
+    }
+
 }

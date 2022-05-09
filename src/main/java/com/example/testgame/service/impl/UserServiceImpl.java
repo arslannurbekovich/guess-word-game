@@ -5,6 +5,9 @@ import com.example.testgame.dto.UserRegistrationDto;
 import com.example.testgame.entity.Role;
 import com.example.testgame.entity.User;
 import com.example.testgame.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,6 +58,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).get();
         user.setIsDeleted(true);
         userRepository.save(user);
+    }
+
+    @Override
+    public Page<User> getUsersPagination(int currentPage, int size) {
+        Pageable pageable = PageRequest.of(currentPage, size);
+        return userRepository.findAll(pageable);
     }
 
     @Override

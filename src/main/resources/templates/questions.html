@@ -63,5 +63,28 @@
         </tbody>
     </table>
 </div>
+
+<div th:if="${!questions.isEmpty()}" class="container">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            <li th:if="${currentPage != 0}" class="page-item">
+                <a class="page-link" th:href="@{'/questions/page/'+${currentPage-1}}">Предыдущая</a>
+            </li>
+            <li th:if="${currentPage == 0}" class="page-item disabled">
+                <a class="page-link" href="#">Предыдущая</a>
+            </li>
+            <li th:each="page:${#numbers.sequence(1,totalPage)}" class="page-item" aria-current="page"
+                th:classappend="${currentPage==(page-1)? 'active' : ''}">
+                <a class="page-link" th:href="@{'/questions/page/'+${page-1}}">[[${page}]]</a>
+            </li>
+            <li th:if="${currentPage+1 != totalPage}" class="page-item">
+                <a class="page-link" th:href="@{'/questions/page/'+${currentPage+1}}">Следующая</a>
+            </li>
+            <li th:if="${currentPage+1 == totalPage}" class="page-item disabled">
+                <a class="page-link" href="#">Следующая</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 </body>
 </html>
