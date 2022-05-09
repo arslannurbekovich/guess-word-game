@@ -161,7 +161,7 @@ function sending(){
     console.log("save")
 }
 
-document.getElementById('maxWrong').innerHTML = answer;
+document.getElementById('maxWrong').innerHTML = maxWrong;
 
 generateButtons();
 questionWord();

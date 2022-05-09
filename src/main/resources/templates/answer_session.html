@@ -51,8 +51,8 @@
             <td th:text = "${answer.id}"></td>
             <td th:text = "${answer.question.name}"></td>
             <td th:text="${answer.question.answer}"></td>
-            <td> <span th:text="${answer.question.createDate.toLocalDate()}"></span>
-                 <span th:text="${answer.question.createDate.toLocalTime()}"></span>
+            <td> <span th:text="${answer.createDate.toLocalDate()}"></span>
+                 <span th:text="${answer.createDate.toLocalTime().toString().substring(0,8)}"></span>
             </td>
             <td th:text="${answer.attempts}"></td>
             <td><th:block th:if="${answer.status.name().startsWith('LOSS')}">
