@@ -7,6 +7,9 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -26,14 +29,31 @@
 </nav>
 
 <section class="ui-icon-backgrounds">
-
-    <div class="form-group">
+    <div th:if="${!questionList.isEmpty()}" class="form-group">
         <h1 style="margin-left: 50rem; color: white"> Игра Поле чудес </h1>
         <div class="row">
+            <script>
+                swal({
+                    title: "Добро пожаловать в игру \"Поле дудес\"!",
+                    text: "Нажимте на кнопку \"Начать игру\"",
+                    icon: "info",
+                });
+            </script>
             <button  th:onclick="|window.location.href='@{/game}'|" style="margin-left: 52rem;
              margin-top:20rem; padding: 10px 80px 10px 80px;
             font-size: 25px" type="submit" class="btn btn-success">Начать игру</button>
         </div>
+    </div>
+    <div th:if="${questionList.isEmpty()}" style="color: white; text-align: center">
+        <script>
+            swal({
+                title: "Нет вопросов чтобы начать игру!",
+                text: "Добавьте вопросы в разделе \"Управление вопросами\" или обратитесь к администратору.",
+                icon: "error",
+            });
+        </script>
+       <h1>Нет вопросов чтобы начать игру! </h1> <br>
+        <h5>Добавьте вопросы в разделе "Управление вопросами" или обратитесь к администратору.</h5>
     </div>
 </section>
 

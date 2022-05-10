@@ -4,6 +4,7 @@ import com.example.testgame.dao.UserRepository;
 import com.example.testgame.dto.UserRegistrationDto;
 import com.example.testgame.entity.Role;
 import com.example.testgame.entity.User;
+import com.example.testgame.exceptions.NotFoundException;
 import com.example.testgame.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,10 +43,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.getAllByIsDeletedFalse();
-    }
 
     @Override
     public User getUser(String username) {
@@ -55,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long id) {
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("Пользователь не найдено!"));
         user.setIsDeleted(true);
         userRepository.save(user);
     }
@@ -63,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> getUsersPagination(int currentPage, int size) {
         Pageable pageable = PageRequest.of(currentPage, size);
-        return userRepository.findAll(pageable);
+        return userRepository.getAllByIsDeletedFalse(pageable);
     }
 
     @Override

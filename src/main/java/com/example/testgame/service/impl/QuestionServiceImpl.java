@@ -2,6 +2,7 @@ package com.example.testgame.service.impl;
 
 import com.example.testgame.dao.QuestionRepository;
 import com.example.testgame.entity.Question;
+import com.example.testgame.exceptions.NotFoundException;
 import com.example.testgame.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +33,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getQuestionById(Long id) {
-        return questionRepository.findById(id).get();
+        return questionRepository.findById(id).orElseThrow(()-> new NotFoundException("Вопрос не найдено!"));
     }
 
     @Override

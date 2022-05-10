@@ -8,12 +8,15 @@ VALUES (now(), now(), 'ROLE_USER');
 --creating admin
 INSERT INTO users (create_date, update_date, full_name, password, username, is_deleted)
 VALUES (now(), now(), 'admin', '$2a$10$TFWhlXm59t/XS5XaOYfBkOuXW/Az7ui03.WtMSbvk6y7quZm9gidu', 'admin', false );
+--password: admin
 
 INSERT INTO users (create_date, update_date, full_name, password, username, is_deleted)
-VALUES (now(), now(), 'Айбек Жапаров', '777777', 'Aibek', false );
+VALUES (now(), now(), 'Айбек Жапаров', '$2a$10$DtuVqNRIFFoeETILwAdeAe83tFAAr.prOziCU0b5gnynW07HoFhNK', 'Aibek', false );
+--password: 12345
 
 INSERT INTO users (create_date, update_date, full_name, password, username, is_deleted)
-VALUES (now(), now(), 'Арслан Нурбеков', '$123456', 'Arslan', false );
+VALUES (now(), now(), 'Арслан Нурбеков', '$2a$10$hNaMZQK2oCv.S9bner9poOsCXUBTP02Gw/7NjgFtSZgNHfok.dABG', 'Arslan', false );
+--password: ars
 
 -- giving roles to admin
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1);
