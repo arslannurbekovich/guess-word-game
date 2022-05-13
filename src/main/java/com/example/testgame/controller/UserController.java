@@ -30,9 +30,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String findAllUsers(Model model) {
+    public String findAllUsers(Model model, String keyword) {
         model.addAttribute("dateFormat", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        return getPagination(0,model);
+        return getPagination(0,model,keyword);
     }
 
     @GetMapping("/users/{id}")
@@ -42,14 +42,21 @@ public class UserController {
     }
 
     @GetMapping("users/page/{page}")
-    public String getPagination(@PathVariable int page, Model model){
+    public String getPagination(@PathVariable int page, Model model,String keyword){
 
-        Page<User> userPage = userService.getUsersPagination(page,5);
-
-        model.addAttribute("users", userPage);
         model.addAttribute("currentPage",page);
-        model.addAttribute("totalPage",userPage.getTotalPages());
-        model.addAttribute("totalItem",userPage.getTotalElements());
+
+        if (keyword != null){
+            Page<User> userPageWithSearch = userService.getUsersPaginationAndWithSearch(page,5,keyword);
+            model.addAttribute("users",userPageWithSearch);
+            model.addAttribute("totalPage",userPageWithSearch.getTotalPages());
+            model.addAttribute("totalItem",userPageWithSearch.getTotalElements());
+        } else {
+            Page<User> userPage = userService.getUsersPagination(page,5);
+            model.addAttribute("users", userPage);
+            model.addAttribute("totalPage",userPage.getTotalPages());
+            model.addAttribute("totalItem",userPage.getTotalElements());
+        }
 
         return "users";
     }

@@ -1,6 +1,7 @@
 package com.example.testgame.service.impl;
 
 import com.example.testgame.dao.AnswerRepository;
+import com.example.testgame.dto.AnswerStatusDto;
 import com.example.testgame.entity.Answer;
 import com.example.testgame.entity.Question;
 import com.example.testgame.entity.User;
@@ -10,6 +11,7 @@ import com.example.testgame.service.QuestionService;
 import com.example.testgame.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,8 +59,34 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public Integer getTotalPages(Integer totalElements, int limit) {
+        return (int) Math.ceil(((double) totalElements / limit));
+    }
+
+
+    @Override
+    public Integer getTotalAnswersByUserWithFilter(Long userId, Status status) {
+        return answerRepository.countAllByUserIdAndAndStatusEquals(userId,status);
+    }
+
+    @Override
     public List<Answer> findAnswersByUserWithTotalPage(Long userId, Integer page) {
         return answerRepository.getAnswersByUserWithTotalPage(userId,page);
+    }
+
+    @Override
+    public List<Answer> findAnswersByUserWithTotalPageWithFilter(Long userId, Integer page, String status) {
+        return answerRepository.getAnswersByUserWithTotalPageWithFilter(userId,status,page);
+    }
+
+    @Override
+    public List<AnswerStatusDto> getAllStatuses() {
+        List<AnswerStatusDto> statusList = new ArrayList<>();
+        AnswerStatusDto statusDtoWon = new AnswerStatusDto(Status.WON,"Выигравшие вопросы");
+        AnswerStatusDto statusDtoLoss = new AnswerStatusDto(Status.LOSS,"Проигравшие вопросы");
+        statusList.add(statusDtoLoss);
+        statusList.add(statusDtoWon);
+        return statusList;
     }
 
 }

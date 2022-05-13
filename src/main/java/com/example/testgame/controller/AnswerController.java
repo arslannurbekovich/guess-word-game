@@ -1,6 +1,8 @@
 package com.example.testgame.controller;
 
+import com.example.testgame.dto.AnswerStatusDto;
 import com.example.testgame.entity.Answer;
+import com.example.testgame.enums.Status;
 import com.example.testgame.service.AnswerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -23,27 +26,55 @@ public class AnswerController {
 
 
     @GetMapping("/sessions/{id}")
-    public String findSessionByUser(@PathVariable Long id, Model model) {
-        return getAnswerPagination(id,0,model);
+    public String findSessionByUser(@PathVariable Long id,
+                                    Model model,
+                                    @Valid String values) {
+
+        return getAnswerPagination(id, 0, model, values);
     }
 
     @GetMapping("/sessions/{id}/{page}")
-    public String getAnswerPagination(@PathVariable Long id,@PathVariable Integer page, Model model){
-
+    public String getAnswerPagination(@PathVariable Long id,
+                                      @PathVariable Integer page,
+                                      Model model,
+                                      String values) {
         int limit = 5;
-        Integer sizeOffset = (limit*page);
+        Integer sizeOffset = (limit * page);
 
-        List<Answer> answerPage = answerService.findAnswersByUserWithTotalPage(id,sizeOffset);
+        List<AnswerStatusDto> statusList = answerService.getAllStatuses();
 
-        Integer totalElements = answerService.getTotalAnswersByUser(id);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("userId", id);
+        model.addAttribute("statusList", statusList);
 
-        Integer totalPage = (int)Math.ceil(((double)totalElements/limit));
+        if (values != null) {
+            Status status = Status.valueOf(values);
 
-        model.addAttribute("sessions", answerPage);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("totalPage",totalPage);
-        model.addAttribute("totalItem",totalElements);
-        model.addAttribute("userId",id);
+            List<Answer> answerPage = answerService.findAnswersByUserWithTotalPageWithFilter(id, sizeOffset, values);
+
+            Integer totalElements = answerService.getTotalAnswersByUserWithFilter(id, status);
+
+            Integer totalPage = answerService.getTotalPages(totalElements,limit);
+
+            model.addAttribute("sessions", answerPage);
+            model.addAttribute("totalPage", totalPage);
+            model.addAttribute("totalItem", totalElements);
+            model.addAttribute("filterStatus", true);
+            model.addAttribute("value",values);
+
+        } else {
+
+            List<Answer> answerPage = answerService.findAnswersByUserWithTotalPage(id, sizeOffset);
+
+            Integer totalElements = answerService.getTotalAnswersByUser(id);
+
+            Integer totalPage = answerService.getTotalPages(totalElements,limit);
+
+            model.addAttribute("sessions", answerPage);
+            model.addAttribute("totalPage", totalPage);
+            model.addAttribute("totalItem", totalElements);
+            model.addAttribute("filterStatus",false);
+        }
 
         return "answer_session";
     }

@@ -20,4 +20,6 @@ public interface QuestionService {
     Question findQuestionByAnswer(String answer);
 
     Page<Question> getQuestionPagination(Integer currentPage, Integer size);
+
+    Page<Question> getQuestionPaginationWithSearch(Integer currentPage, Integer size, String keyword);
 }

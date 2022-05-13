@@ -21,8 +21,8 @@ public class QuestionController {
     }
 
     @GetMapping("/questions")
-    public String listQuestions(Model model) {
-        return getQuestionPagination(0,model);
+    public String listQuestions(Model model,String keyword) {
+        return getQuestionPagination(0,model,keyword);
     }
 
     @GetMapping("/questions/new")
@@ -69,15 +69,23 @@ public class QuestionController {
     }
 
     @GetMapping("/questions/page/{page}")
-    public String getQuestionPagination(@PathVariable Integer page,Model model){
+    public String getQuestionPagination(@PathVariable Integer page,Model model,String keyword){
 
-        Page<Question> questionPage = questionService.getQuestionPagination(page,5);
+        if (keyword != null){
+            Page<Question> questionPageSearch = questionService.getQuestionPaginationWithSearch(page,5,keyword);
 
-        model.addAttribute("questions", questionPage);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("totalPage",questionPage.getTotalPages());
-        model.addAttribute("totalItem",questionPage.getTotalElements());
+            model.addAttribute("questions", questionPageSearch);
+            model.addAttribute("currentPage",page);
+            model.addAttribute("totalPage",questionPageSearch.getTotalPages());
+            model.addAttribute("totalItem",questionPageSearch.getTotalElements());
+        } else {
+            Page<Question> questionPage = questionService.getQuestionPagination(page,5);
 
+            model.addAttribute("questions", questionPage);
+            model.addAttribute("currentPage",page);
+            model.addAttribute("totalPage",questionPage.getTotalPages());
+            model.addAttribute("totalItem",questionPage.getTotalElements());
+        }
         return "questions";
 
     }

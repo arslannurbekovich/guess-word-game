@@ -29,16 +29,31 @@
     </div>
 </nav>
 
-<div class ="container">
-    <div class = "row">
+<div class="container">
+    <div class="row">
         <h1 style="margin: 20px 50px 35px 250px"> История игр пользователя
             <th:block th:if="${!sessions.isEmpty()}">
-            <span th:text = "${sessions[0].user.username}"></span></th:block>
-           </h1>
+                <span th:text="${sessions[0].user.username}"></span></th:block>
+        </h1>
     </div>
 
-    <table class = "table table-striped table-bordered">
-        <thead class = "table-dark">
+    <form th:action="@{/session/sessions/{id}(id=${userId})}" method="get">
+        <div class="input-group col-md-5 mb-4">
+            <select class="form-control" name="values" aria-label="Default select example">
+                <option value="" disabled selected>Выберите одну из вариантов</option>
+                <option th:each="values : ${statusList}"
+                        th:value="${values.status}"
+                        th:text="${values.value}">
+                </option>
+            </select>
+            <button class="btn btn-success" type="submit">Фильтровать</button>
+            <input type="hidden"/>
+        </div>
+    </form>
+
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
         <tr>
             <th> №</th>
             <th> Вопрос</th>
@@ -50,20 +65,21 @@
         </thead>
 
         <tbody>
-        <tr th:each = "answer: ${sessions}">
-            <td th:text = "${answer.id}"></td>
-            <td th:text = "${answer.question.name}"></td>
+        <tr th:each="answer: ${sessions}">
+            <td th:text="${answer.id}"></td>
+            <td th:text="${answer.question.name}"></td>
             <td th:text="${answer.question.answer}"></td>
-            <td> <span th:text="${answer.createDate.toLocalDate()}"></span>
-                 <span th:text="${answer.createDate.toLocalTime().toString().substring(0,8)}"></span>
+            <td><span th:text="${answer.createDate.toLocalDate()}"></span>
+                <span th:text="${answer.createDate.toLocalTime().toString().substring(0,8)}"></span>
             </td>
             <td th:text="${answer.attempts}"></td>
-            <td><th:block th:if="${answer.status.name().startsWith('LOSS')}">
-            <span style="color: red">Проиграл</span>
-            </th:block>
-            <th:block th:if="${answer.status.name().startsWith('WON')}">
-                <span style="color: green">Выиграл</span>
-            </th:block>
+            <td>
+                <th:block th:if="${answer.status.name().startsWith('LOSS')}">
+                    <span style="color: red">Проиграл</span>
+                </th:block>
+                <th:block th:if="${answer.status.name().startsWith('WON')}">
+                    <span style="color: green">Выиграл</span>
+                </th:block>
             </td>
 
         </tr>
@@ -71,7 +87,7 @@
     </table>
 </div>
 
-<div th:if="${!sessions.isEmpty()}" class="container">
+<div th:if="${!sessions.isEmpty() && !filterStatus}" class="container">
     <nav aria-label="...">
         <ul class="pagination justify-content-center">
             <li th:if="${currentPage != 0}" class="page-item">
@@ -86,6 +102,29 @@
             </li>
             <li th:if="${currentPage+1 != totalPage}" class="page-item">
                 <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${currentPage+1}}">Следующая</a>
+            </li>
+            <li th:if="${currentPage+1 == totalPage}" class="page-item disabled">
+                <a class="page-link" href="#">Следующая</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div th:if="${!sessions.isEmpty() && filterStatus}" class="container">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            <li th:if="${currentPage != 0}" class="page-item">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${currentPage-1}+'?values='+${value}}">Предыдущая</a>
+            </li>
+            <li th:if="${currentPage == 0}" class="page-item disabled">
+                <a class="page-link" href="#">Предыдущая</a>
+            </li>
+            <li th:each="page:${#numbers.sequence(1,totalPage)}" class="page-item" aria-current="page"
+                th:classappend="${currentPage==(page-1)? 'active' : ''}">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${page-1}+'?values='+${value}}">[[${page}]]</a>
+            </li>
+            <li th:if="${currentPage+1 != totalPage}" class="page-item">
+                <a class="page-link" th:href="@{'/session/sessions/'+${userId}+'/'+${currentPage+1}+'?values='+${value}}">Следующая</a>
             </li>
             <li th:if="${currentPage+1 == totalPage}" class="page-item disabled">
                 <a class="page-link" href="#">Следующая</a>

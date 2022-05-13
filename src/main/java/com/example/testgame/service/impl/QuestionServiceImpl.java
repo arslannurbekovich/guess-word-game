@@ -58,4 +58,10 @@ public class QuestionServiceImpl implements QuestionService {
 
         return questionRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Question> getQuestionPaginationWithSearch(Integer currentPage, Integer size, String keyword) {
+        Pageable pageable = PageRequest.of(currentPage, size);
+        return questionRepository.getAllByAnswerIsContainingIgnoreCaseOrNameIsContainingIgnoreCase(pageable,keyword,keyword);
+    }
 }

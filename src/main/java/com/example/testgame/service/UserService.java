@@ -14,4 +14,6 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getUsersPagination(int currentPage, int size);
 
+    Page<User> getUsersPaginationAndWithSearch(int currentPage, int size, String keyword);
+
 }

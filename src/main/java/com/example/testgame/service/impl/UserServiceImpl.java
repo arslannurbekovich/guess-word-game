@@ -63,6 +63,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> getUsersPaginationAndWithSearch(int currentPage, int size, String keyword) {
+        Pageable pageable = PageRequest.of(currentPage, size);
+        return userRepository.getAllByIsDeletedFalseAndFullNameIsContainingIgnoreCaseOrUsernameIsContainingIgnoreCase(pageable,keyword,keyword);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByUsername(username);
