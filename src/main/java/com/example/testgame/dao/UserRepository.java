@@ -12,5 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> getAllByIsDeletedFalse(Pageable pageable);
 
-    Page<User> getAllByIsDeletedFalseAndFullNameIsContainingIgnoreCaseOrUsernameIsContainingIgnoreCase(Pageable pageable, String keyword,String keyword2);
+    Page<User> getAllByIsDeletedFalseAndFullNameIsContainingIgnoreCaseOrIsDeletedFalseAndUsernameContainingIgnoreCase(Pageable pageable, String keyword,String keyword2);
 }

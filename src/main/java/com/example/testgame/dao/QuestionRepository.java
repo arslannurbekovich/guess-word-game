@@ -8,12 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM questions WHERE UPPER(answer)= :answer")
     Question getQuestionByAnswer(@Param("answer") String answer);
 
-    Page<Question> getAllByAnswerIsContainingIgnoreCaseOrNameIsContainingIgnoreCase(Pageable pageable,String keyword1, String keyword2);
+    Page<Question> getAllByIsDeletedFalseAndAnswerIsContainingIgnoreCaseOrIsDeletedFalseAndNameContainingIgnoreCase(Pageable pageable,String keyword1,String keyword2);
 
+    Page<Question> getAllByIsDeletedFalse(Pageable pageable);
+
+    List<Question> getAllByIsDeletedFalse();
 }

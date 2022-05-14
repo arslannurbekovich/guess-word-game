@@ -29,4 +29,7 @@ public class Question extends BaseEntity {
     @Column(name = "answer")
     private String answer;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
 }

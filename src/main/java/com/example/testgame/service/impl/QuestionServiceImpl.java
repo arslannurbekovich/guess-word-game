@@ -22,12 +22,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+        return questionRepository.getAllByIsDeletedFalse();
     }
 
     @Override
     public Question saveQuestion(Question question) {
-
+        question.setIsDeleted(false);
         return questionRepository.save(question);
     }
 
@@ -37,13 +37,19 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question updateQuestion(Question question) {
-        return questionRepository.save(question);
+    public Question updateQuestion(Question question,Long id) {
+        Question updateQuestion = getQuestionById(id);
+        updateQuestion.setId(id);
+        updateQuestion.setName(question.getName());
+        updateQuestion.setAnswer(question.getAnswer());
+        return questionRepository.save(updateQuestion);
     }
 
     @Override
     public void deleteQuestionById(Long id) {
-        questionRepository.deleteById(id);
+        Question question = getQuestionById(id);
+        question.setIsDeleted(true);
+        questionRepository.save(question);
     }
 
     @Override
@@ -56,12 +62,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         Pageable pageable = PageRequest.of(currentPage, size);
 
-        return questionRepository.findAll(pageable);
+        return questionRepository.getAllByIsDeletedFalse(pageable);
     }
 
     @Override
     public Page<Question> getQuestionPaginationWithSearch(Integer currentPage, Integer size, String keyword) {
         Pageable pageable = PageRequest.of(currentPage, size);
-        return questionRepository.getAllByAnswerIsContainingIgnoreCaseOrNameIsContainingIgnoreCase(pageable,keyword,keyword);
+        return questionRepository.getAllByIsDeletedFalseAndAnswerIsContainingIgnoreCaseOrIsDeletedFalseAndNameContainingIgnoreCase(pageable,keyword,keyword);
     }
 }

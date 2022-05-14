@@ -53,12 +53,7 @@ public class QuestionController {
     public String updateQuestion(@PathVariable Long id,
                                 @ModelAttribute("question") @Valid Question question) {
 
-        Question updateQuestion = questionService.getQuestionById(id);
-        updateQuestion.setId(id);
-        updateQuestion.setName(question.getName());
-        updateQuestion.setAnswer(question.getAnswer());
-
-        questionService.updateQuestion(updateQuestion);
+        questionService.updateQuestion(question,id);
         return "redirect:/questions";
     }
 
